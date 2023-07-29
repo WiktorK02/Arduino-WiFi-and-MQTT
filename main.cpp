@@ -64,7 +64,7 @@ void setupWiFi() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  digitalWrite(ledPin12, HIGH); 
+  digitalWrite(ledPin12, HIGH); // led that monitoring wifi connection 
 }
 
 void reconnect() {
@@ -73,7 +73,7 @@ void reconnect() {
     if (mqttClient.connect(mqttClientID)) {
       Serial.println("connected");
       mqttClient.subscribe(mqttTopic);
-      digitalWrite(ledPin8, HIGH);
+      digitalWrite(ledPin8, HIGH); // led that monitoring MQTT connection 
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
