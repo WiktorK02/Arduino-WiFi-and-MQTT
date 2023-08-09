@@ -1,28 +1,31 @@
 #include <PubSubClient.h>
 #include <WiFiNINA.h>
 
-const char* ssid = "******";
-const char* password = "******";
-const char* mqttServer = "******";
+const char* ssid = "***";
+const char* password = "***";
+const char* mqttServer = "***";
 const int mqttPort = 1883;
 const char* mqttTopic = "led/control";
 const char* mqttTopicStatus = "pin/status";
 const char* mqttClientID = "arduino-client";
 
-const int ledPin13 = 13;
+const int ledPin = 13; // LED pin
 const int ledPin12 = 12;
 const int ledPin8 = 8;
-//const int monitoredPin = 7;
-boolean ledState = LOW;
+const int buttonPin = 2;
+ 
+int ledState = LOW;     
+int lastButtonState = HIGH; 
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 void setup() {
-  pinMode(ledPin13, OUTPUT);
-  pinMode(ledPin12, OUTPUT); // Assuming ledPin12 is used for an LED
-  pinMode(ledPin8, OUTPUT);  // Assuming ledPin8 is used for an LED
-  //pinMode(monitoredPin, OUTPUT); // Using INPUT_PULLUP to enable the internal pull-up resistor
+  pinMode(ledPin, OUTPUT);
+  pinMode(ledPin12, OUTPUT); 
+  pinMode(ledPin8, OUTPUT); 
+
+  pinMode(buttonPin, INPUT_PULLUP);
   
   digitalWrite(ledPin, ledState);
   
@@ -34,22 +37,32 @@ void setup() {
 }
 
 void loop() {
+  // Manual turn ON/OFF LED (pin13)
+  int reading = digitalRead(buttonPin);
+
+  if (reading != lastButtonState) {
+    delay(50);  // Debounce delay
+    reading = digitalRead(buttonPin);  // Read button again after debounce delay
+
+    if (reading != lastButtonState) {
+      lastButtonState = reading;
+
+      if (reading == LOW) {
+        ledState = !ledState;  
+
+        if (ledState == HIGH) {
+          digitalWrite(ledPin, HIGH); 
+        } else {
+          digitalWrite(ledPin, LOW);  
+        }
+      }
+    }
+  }
+  
   if (!mqttClient.connected()) {
     reconnect();
   }
   mqttClient.loop();
-
-  /* String statusMessage = "";
-  if (val == LOW){
-    statusMessage = "OFF"; // Assuming the monitoredPin is connected to GND when it's ON
-  }
-  else{
-    statusMessage = "ON"; // Assuming the monitoredPin is HIGH (pulled up) when it's OFF
-  }
-  mqttClient.publish(mqttTopicStatus, statusMessage.c_str());*/
-
-  // Delay added for stability and to avoid flooding the MQTT broker with messages
-  delay(1000);
 }
 
 void setupWiFi() {
@@ -64,7 +77,7 @@ void setupWiFi() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  digitalWrite(ledPin12, HIGH); // led that monitoring wifi connection 
+  digitalWrite(ledPin12, HIGH); // Assuming ledPin12 is used for an LED
 }
 
 void reconnect() {
@@ -73,7 +86,7 @@ void reconnect() {
     if (mqttClient.connect(mqttClientID)) {
       Serial.println("connected");
       mqttClient.subscribe(mqttTopic);
-      digitalWrite(ledPin8, HIGH); // led that monitoring MQTT connection 
+      digitalWrite(ledPin8, HIGH); // Assuming ledPin8 is used for an LED
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
@@ -93,11 +106,11 @@ void handleMqttMessage(char* topic, byte* payload, unsigned int length) {
 
   if (message.equals("ON")) {
     ledState = HIGH;
-    digitalWrite(ledPin13, ledState);
+    digitalWrite(ledPin, ledState);
     Serial.println("LED is ON");
   } else if (message.equals("OFF")) {
     ledState = LOW;
-    digitalWrite(ledPin13, ledState);
+    digitalWrite(ledPin, ledState);
     Serial.println("LED is OFF");
   }
 }
