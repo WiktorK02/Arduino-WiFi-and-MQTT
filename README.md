@@ -1,5 +1,7 @@
 # Arduino WiFi and MQTT
-
+*Arduino Board I use: ARDUINO UNO WiFi REV2*<br>
+## About
+The Arduino WiFi and MQTT Project explores the synergy between Arduino boards, WiFi connectivity, and the MQTT protocol, enabling the creation of robust IoT solutions. With step-by-step explanation, learn to connect Arduino devices to WiFi networks, implement MQTT's publish-subscribe mechanism, and develop applications such as sensor data monitoring and remote device control.
 # Node-Red
 ## Screenshot
 ![Screenshot1](https://github.com/WiktorK02/arduino-wifi-and-mqtt/assets/123249470/1014dcbf-0f6c-4290-ac38-928838bf142e)
@@ -53,3 +55,5 @@
     }
 ]
 ```
+## License 
+[MIT license](LICENSE)
