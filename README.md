@@ -5,7 +5,9 @@ The Arduino WiFi and MQTT Project explores the synergy between Arduino boards, W
 # Node-Red
 ## Screenshot
 ![Screenshot1](https://github.com/WiktorK02/arduino-wifi-and-mqtt/assets/123249470/1014dcbf-0f6c-4290-ac38-928838bf142e)
-## Import to Node-Red
+## Importing to Node-Red
+**Add libraries before import:**<br>
+* node-red-contrib-aedes (or use any other borker; if so then remove broker node and change IP in MQTT node)*
 ```
 [
     {
@@ -55,5 +57,18 @@ The Arduino WiFi and MQTT Project explores the synergy between Arduino boards, W
     }
 ]
 ```
+## How to Contribute
+1. Fork the Project
+2. Clone repo with your GitHub username instead of ```YOUR-USERNAME```:<br>
+```
+$ git clone https://github.com/YOUR-USERNAME/arduino-wifi-and-mqtt
+```
+3. Create new branch:<br>
+```
+$ git branch BRANCH-NAME 
+$ git checkout BRANCH-NAME
+```
+4. Make changes and test<br>
+5. Submit Pull Request with comprehensive description of change
 ## License 
 [MIT license](LICENSE)
